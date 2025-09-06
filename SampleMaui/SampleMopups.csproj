@@ -49,6 +49,7 @@
 	  <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.5" />
 	  <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.5" />
     <PackageReference Include="Controls.UserDialogs.Maui" Version="1.9.0" />
+    <PackageReference Include="Mopups" Version="1.3.2" />
   </ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Mopups\Mopups.Maui\Mopups.csproj" />
