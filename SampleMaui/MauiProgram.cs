@@ -1,4 +1,5 @@
-﻿using Mopups.Hosting;
+﻿using Controls.UserDialogs.Maui;
+using Mopups.Hosting;
 
 namespace SampleMaui;
 
@@ -14,7 +15,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             })
 
-            .ConfigureMopups();
+            .ConfigureMopups()
+            .UseUserDialogs();
 
         //Work out how to register this as a singleton
         return builder.Build();

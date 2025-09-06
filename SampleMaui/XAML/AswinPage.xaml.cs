@@ -1,4 +1,5 @@
-﻿using Mopups.Pages;
+﻿using Controls.UserDialogs.Maui;
+using Mopups.Pages;
 
 namespace SampleMopups.XAML;
 
@@ -18,5 +19,14 @@ public partial class AswinPage : PopupPage
     private async void blahButton_Clicked(object sender, EventArgs e)
     {
         await blahButton.RelRotateTo(180,1000);
+    }
+
+    protected override async void OnAppearingAnimationEnd()
+    {
+        base.OnAppearingAnimationEnd();
+
+        UserDialogs.Instance.ShowLoading("Loading");
+        await Task.Delay(500);
+        UserDialogs.Instance.HideHud();
     }
 }
