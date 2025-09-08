@@ -20,13 +20,4 @@ public partial class AswinPage : PopupPage
     {
         await blahButton.RelRotateTo(180,1000);
     }
-
-    protected override async void OnAppearingAnimationEnd()
-    {
-        base.OnAppearingAnimationEnd();
-
-        UserDialogs.Instance.ShowLoading("Loading");
-        await Task.Delay(500);
-        UserDialogs.Instance.HideHud();
-    }
 }

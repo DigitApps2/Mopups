@@ -1,11 +1,10 @@
-using System.Reflection;
 using AsyncAwaitBestPractices.MVVM;
+using Controls.UserDialogs.Maui;
 using Mopups.Animations.Base;
 using Mopups.Pages;
 using Mopups.Services;
-
 using SampleMopups.XAML;
-
+using System.Reflection;
 using Button = Microsoft.Maui.Controls.Button;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
@@ -125,7 +124,15 @@ public partial class MainPage : ContentPage
                     animation.EasingIn = (Easing)((FieldInfo)EasingInPicker.SelectedItem).GetValue(null);
                     animation.EasingOut = (Easing)((FieldInfo)EasingOutPicker.SelectedItem).GetValue(null);
 
-                    await MopupService.Instance.PushAsync(new TPopupPage { Animation = animation });
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await MopupService.Instance.PushAsync(new TPopupPage { Animation = animation });
+                        UserDialogs.Instance.ShowLoading("Loading");
+                        await Task.Delay(500);
+                        UserDialogs.Instance.HideHud();
+                        await MopupService.Instance.PopAsync();
+
+                    }
                 }
                 catch (Exception)
                 {
