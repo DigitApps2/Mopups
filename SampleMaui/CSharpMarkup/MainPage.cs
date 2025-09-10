@@ -1,10 +1,10 @@
 using AsyncAwaitBestPractices.MVVM;
-using Controls.UserDialogs.Maui;
 using Mopups.Animations.Base;
 using Mopups.Pages;
 using Mopups.Services;
 using SampleMopups.XAML;
 using System.Reflection;
+using Acr.UserDialogs;
 using Button = Microsoft.Maui.Controls.Button;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
@@ -27,19 +27,19 @@ public partial class MainPage : ContentPage
         BackgroundColor = Color.FromRgb(255, 255, 255);
         Title = "Popup Demo";
         Content = new ScrollView
-                  {
-                      VerticalOptions = LayoutOptions.FillAndExpand,
-                      Content = GenerateMainPageStackLayout()
-                  };
+        {
+            VerticalOptions = LayoutOptions.FillAndExpand,
+            Content = GenerateMainPageStackLayout()
+        };
     }
 
     private StackLayout GenerateMainPageStackLayout()
     {
         var mainStackLayout = new StackLayout
-                              {
-                                  Spacing = 20,
-                                  Margin = new Thickness(10, 15)
-                              };
+        {
+            Spacing = 20,
+            Margin = new Thickness(10, 15)
+        };
         mainStackLayout.Add(AnimationPicker = PopupAnimationPicker());
         mainStackLayout.Add(new Label() { Text = "In" });
         mainStackLayout.Add(EasingInPicker = EasingAnimationPicker());
@@ -50,15 +50,15 @@ public partial class MainPage : ContentPage
         mainStackLayout.Add(GeneratePopupButton("Open Login Popup", GenerateSimpleCommandForPopup<LoginPage>()));
         mainStackLayout.Add(GeneratePopupButton("Open Aswins Popup", GenerateSimpleCommandForPopup<AswinPage>()));
         var newButton = new Button
-                        {
-                            Text = "Switch To Prebaked Examples",
-                            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
-                            TextColor = Color.FromRgb(255, 255, 255),
-                            Command = new AsyncCommand(async () =>
-                                                       {
-                                                           await Navigation.PushAsync(new PreBakedExample());
-                                                       })
-                        };
+        {
+            Text = "Switch To Prebaked Examples",
+            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
+            TextColor = Color.FromRgb(255, 255, 255),
+            Command = new AsyncCommand(async () =>
+            {
+                await Navigation.PushAsync(new PreBakedExample());
+            })
+        };
         mainStackLayout.Add(newButton);
 
         return mainStackLayout;
@@ -66,48 +66,48 @@ public partial class MainPage : ContentPage
         Picker PopupAnimationPicker()
         {
             return new Picker
-                   {
-                       ItemsSource = typeof(BaseAnimation)
+            {
+                ItemsSource = typeof(BaseAnimation)
                                      .Assembly.GetTypes()
-                                     .Where( t => t.IsSubclassOf( typeof(BaseAnimation) ) && !t.IsAbstract )
-                                     .Select( t => (BaseAnimation)Activator.CreateInstance( t ) )
+                                     .Where(t => t.IsSubclassOf(typeof(BaseAnimation)) && !t.IsAbstract)
+                                     .Select(t => (BaseAnimation)Activator.CreateInstance(t))
                                      .ToList(),
-                       ItemDisplayBinding = new Binding( ".", BindingMode.OneWay, ObjectTypeNameConverter.Instance ),
-                       SelectedIndex = 0
-                   };
+                ItemDisplayBinding = new Binding(".", BindingMode.OneWay, ObjectTypeNameConverter.Instance),
+                SelectedIndex = 0
+            };
         }
 
         Picker EasingAnimationPicker()
         {
             return new Picker
-                   {
-                       ItemsSource = typeof(Easing).GetFields( BindingFlags.Public | BindingFlags.Static ),
-                       ItemDisplayBinding = new Binding( "Name", BindingMode.OneWay ),
-                       SelectedIndex = 0
-                   };
+            {
+                ItemsSource = typeof(Easing).GetFields(BindingFlags.Public | BindingFlags.Static),
+                ItemDisplayBinding = new Binding("Name", BindingMode.OneWay),
+                SelectedIndex = 0
+            };
         }
 
         Slider PopupAnimationLengthSlider()
         {
             return new Slider
-                   {
-                       Minimum = 0,
-                       Maximum = 2000,
-                       FlowDirection = FlowDirection.LeftToRight,
-                   };
+            {
+                Minimum = 0,
+                Maximum = 2000,
+                FlowDirection = FlowDirection.LeftToRight,
+            };
         }
 
     }
 
-    private static Button GeneratePopupButton( string buttonText, AsyncCommand buttonCommand )
+    private static Button GeneratePopupButton(string buttonText, AsyncCommand buttonCommand)
     {
         return new Button
-               {
-                   Text = buttonText,
-                   BackgroundColor = Color.FromArgb("#FF7DBBE6"),
-                   TextColor = Color.FromRgb(255, 255, 255),
-                   Command = buttonCommand,
-               };
+        {
+            Text = buttonText,
+            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
+            TextColor = Color.FromRgb(255, 255, 255),
+            Command = buttonCommand,
+        };
     }
 
     private AsyncCommand GenerateSimpleCommandForPopup<TPopupPage>() where TPopupPage : PopupPage, new()
@@ -124,14 +124,10 @@ public partial class MainPage : ContentPage
                     animation.EasingIn = (Easing)((FieldInfo)EasingInPicker.SelectedItem).GetValue(null);
                     animation.EasingOut = (Easing)((FieldInfo)EasingOutPicker.SelectedItem).GetValue(null);
 
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 15; i++)
                     {
                         await MopupService.Instance.PushAsync(new TPopupPage { Animation = animation });
-                        UserDialogs.Instance.ShowLoading("Loading");
-                        await Task.Delay(500);
-                        UserDialogs.Instance.HideHud();
                         await MopupService.Instance.PopAsync();
-
                     }
                 }
                 catch (Exception)
@@ -140,8 +136,4 @@ public partial class MainPage : ContentPage
                 }
             });
     }
-
-
-
-
 }
